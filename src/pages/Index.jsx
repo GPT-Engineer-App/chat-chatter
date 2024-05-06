@@ -7,6 +7,12 @@ const Index = () => {
   const [inputValue, setInputValue] = useState("");
   const toast = useToast();
 
+  const receiveMessage = () => {
+    const replies = ["Hello!", "How are you?", "That's interesting!", "Can you tell me more?"];
+    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+    setMessages((prevMessages) => [...prevMessages, { text: randomReply, sender: "Other" }]);
+  };
+
   const sendMessage = () => {
     if (inputValue.trim() === "") {
       toast({
@@ -17,8 +23,11 @@ const Index = () => {
       });
       return;
     }
-    setMessages([...messages, { text: inputValue, sender: "You" }]);
+    setMessages((prevMessages) => [...prevMessages, { text: inputValue, sender: "You" }]);
     setInputValue("");
+    if (Math.random() > 0.5) {
+      setTimeout(receiveMessage, 1000);
+    }
   };
 
   const handleKeyPress = (event) => {
