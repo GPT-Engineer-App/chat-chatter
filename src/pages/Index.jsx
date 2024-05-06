@@ -5,6 +5,7 @@ import { useState } from "react";
 const Index = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [username, setUsername] = useState("");
   const toast = useToast();
 
   const receiveMessage = () => {
@@ -14,16 +15,16 @@ const Index = () => {
   };
 
   const sendMessage = () => {
-    if (inputValue.trim() === "") {
+    if (inputValue.trim() === "" || username.trim() === "") {
       toast({
-        title: "Cannot send empty message.",
+        title: "Cannot send empty message or username is not set.",
         status: "warning",
         duration: 2000,
         isClosable: true,
       });
       return;
     }
-    setMessages((prevMessages) => [...prevMessages, { text: inputValue, sender: "You" }]);
+    setMessages((prevMessages) => [...prevMessages, { text: inputValue, sender: username }]);
     setInputValue("");
     if (Math.random() > 0.5) {
       setTimeout(receiveMessage, 1000);
@@ -39,9 +40,10 @@ const Index = () => {
   return (
     <Container maxW="container.md" p={4}>
       <VStack spacing={4} align="stretch">
-        <Box h="80vh" overflowY="scroll" p={4} borderWidth="1px" borderRadius="lg">
+        <Input placeholder="Set your username..." value={username} onChange={(e) => setUsername(e.target.value)} />
+        <Box h="70vh" overflowY="scroll" p={4} borderWidth="1px" borderRadius="lg">
           {messages.map((message, index) => (
-            <Box key={index} bg="teal.500" color="white" p={2} borderRadius="md" alignSelf={message.sender === "You" ? "flex-end" : "flex-start"}>
+            <Box key={index} bg="teal.500" color="white" p={2} borderRadius="md" alignSelf={message.sender === username ? "flex-end" : "flex-start"}>
               <Text>{message.text}</Text>
             </Box>
           ))}
